@@ -33,7 +33,7 @@ AMQP.start(broker) do |connection|
     puts [message, id, head]
     Libnotify.show(body: message,
                    summary: head,
-                   timeout: 10,
+                   timeout: 5,
                    icon_path: "/usr/share/icons/github/github2.png")
   end
 end
