@@ -5,6 +5,8 @@ require 'yaml'
 require 'libnotify'
 require 'json'
 
+$0 = "gitnotify\0"
+
 broker = YAML.load_file("broker.yaml")
 
 AMQP.start(broker) do |connection|
