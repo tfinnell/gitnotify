@@ -1,15 +1,23 @@
+Gitnotify
+=========
+Triggers a pop-up notification when a message is received from AMQP queue.
+
+There's a bit to configure here if you're starting from scratch... but, if you already have an AMQP broker configured to your taste, edit ``broker.yaml`` with your credentials and run ``gitnotify.rb``. Once you enable Githubs AMQP service hook you should be getting notifications when someone pushes to your repository.
+
 Advanced Message Queuing Protocol
-=================================
+---------------------------------
 Setup for Arch Linux
---------------------
-#. ``$ packer rabbitmq``
-#. Changed ``NODENAME`` to ``rachael`` in ``/etc/rabbitmq/rabbitmq-env.conf``
-#. ``# rabbitmqctl adduser github <password>``
-#. ``# rabbitmqctl add_vhost github``
-#. ``# rabbitmqctl set_permissions -p github github ".*" ".*" ".*"``
-#. ``tail -f /var/log/rabbitmq/rachael.log`` - keep it open to see results of the next step
-#. On github-- administration settings for the repo, service hooks, amqp -> fill that shit out... test hook
-#. if all went well: **profit.**
+~~~~~~~~~~~~~~~~~~~~
+#. Install rabbitmq from the aur with ``$ packer rabbitmq``
+#. You can change ``NODENAME`` in ``/etc/rabbitmq/rabbitmq-env.conf`` if desired
+#. Install the rabbitmq management interface with ``# rabbitmq-plugins enable rabbitmq_management``
+#. Run the rabbitmq start script
+#. Add a new user or two and get rid of the guest account
+#. Create a new Virtual host eg. ``github``
+#. Create a new Queue using the virutal host you just created eg. ``github``
+#. Create a new Exchange with the queue you just created that is type ``topic`` or ``fanout``
+#. Click on the new exchange you just created and add a binding to the queue you created with the routing key ``github.#`` if you created.
+#. On Github's site: go to administration settings for your repository -> service hooks, amqp -> fill out the form... click test hook... you should see a new message in your queue...
 
 :Notes:
         I tried enabling the manager web interface but ran into some problems...
