@@ -34,6 +34,6 @@ AMQP.start(broker) do |connection|
     Libnotify.show(body: message,
                    summary: head,
                    timeout: 10,
-                   icon_path: "/usr/share/icons/github/github-icon.png")
+                   icon_path: "/usr/share/icons/github/github2.png")
   end
 end
