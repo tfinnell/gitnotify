@@ -34,4 +34,4 @@ Setup for Arch Linux
                  {rabbit_plugins,start,0},
                  {init,start_it,1},
                  {init,start_em,1}]}}
-        Needed to add ``[].`` in the ``enabled_plugins`` file and needed to ``chmod o+r``, then was able to restart the server and gain access to the management interface.
+        Needed to add ``[].`` in the ``enabled_plugins`` file and ``chmod o+r``, then was able to restart the server and gain access to the management interface.
