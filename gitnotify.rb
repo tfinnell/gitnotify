@@ -15,10 +15,6 @@ AMQP.start(broker) do |connection|
   channel = AMQP::Channel.new(connection)
   queue = channel.queue("github", durable: true)
 
-  Signal.trap("INT") do
-    AMQP.stop{ EM.stop }
-  end
-
   queue.subscribe do |md, pl|
 
     jpl = JSON.parse(pl)
