@@ -10,7 +10,7 @@ $0 = "gitnotify\0"
 class Gitnotify
   def initialize(subscription, options, connection)
     channel = AMQP::Channel.new(connection)
-    queue = channel.queue(subscription.to_s, durable: true)
+    queue = channel.queue(subscription, durable: true)
 
     queue.subscribe do |md, pl|
 
@@ -23,12 +23,12 @@ class Gitnotify
         jpl["payload"]["author"]["username"] : "Something"
       head = "#{author} pushed to #{repo}/#{branch}"
 
+      puts "#{head}: #{message}"
       notification({
         summary: head,
         body: message,
-        icon: options[:icon],
-        timeout: options[:timeout]
-      })
+        timeout: options[:timeout],
+        icon_path: options[:icon]})
     end
   end
 
@@ -39,14 +39,13 @@ end
 
 SUBSCRIPTIONS = YAML.load_file('config/subscription.yml')
 
-broker = SUBSCRIPTIONS[:github][:cred]
-
+broker = SUBSCRIPTIONS["github"][:cred]
 
 AMQP.start(broker) do |connection|
   puts "Connected to AMQP broker..."
 
   SUBSCRIPTIONS.each do |subscription, options|
-    Gitnotify.new(subscription, options, connection)
+    Gitnotify.new(subscription, options[:notification], connection)
   end
 end
 
