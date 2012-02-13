@@ -12,9 +12,27 @@ class Gitnotify
     channel = AMQP::Channel.new(connection)
     queue = channel.queue(subscription, durable: true)
 
-    queue.subscribe do |md, pl|
+    connection.on_tcp_connection_loss do |connection, settings|
+      puts "tcp connection loss"
+    end
 
-      jpl = JSON.parse(pl)
+    connection.on_connection_interruption do |connection|
+      puts "Connection interruption?"
+    end
+
+    channel.on_error do |ch, channel_close|
+      puts channel_close.reply_text
+      connection.close { EM.stop }
+    end
+
+    queue.subscribe do |md, pl|
+      begin
+        jpl = JSON.parse(pl)
+        icon = options[:icon]
+      rescue
+        jpl = JSON.parse '{"payload":{"message":"someones sending bad JSON :(","id":"error","author":{"username": "system"}},"_meta":{ "routing_key":"system.error.fed.bad.json"}}'
+        icon =  Dir["/home/tim/git/trollicons/Icons/#{["Sad","Rage"].sample}/*"].sample
+      end
       message = jpl["payload"]["message"]
       id = jpl["payload"]["id"]
       repo = jpl["_meta"]["routing_key"].split(".")[3]
@@ -28,7 +46,7 @@ class Gitnotify
         summary: head,
         body: message,
         timeout: options[:timeout],
-        icon_path: options[:icon]})
+        icon_path: icon})
     end
   end
 
