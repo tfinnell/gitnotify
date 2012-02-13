@@ -4,6 +4,7 @@ require 'amqp'
 require 'libnotify'
 require 'json'
 require 'yaml'
+require 'pry'
 
 $0 = "gitnotify\0"
 
@@ -11,6 +12,22 @@ class Gitnotify
   def initialize(subscription, options, connection)
     channel = AMQP::Channel.new(connection, auto_recovery: true)
     queue = channel.queue(subscription, durable: true)
+
+    connection.on_connection_interruption do
+      puts "connection interruption"
+    end
+
+    connection.on_tcp_connection_failure do
+      puts "connection tcp connection failure"
+    end
+
+    connection.on_tcp_connection_loss do
+      puts "tcp connection loss"
+    end
+
+    channel.on_error do
+      puts "channel error"
+    end
 
     queue.subscribe do |md, pl|
 
@@ -52,10 +69,8 @@ AMQP.start(broker) do |connection|
   product = connection.server_properties["product"] 
   version = connection.server_properties["version"]
   user = connection.settings[:user]
-  host = connection.settings[:host]
-  port = connection.settings[:port]
 
-  puts " #{user} connected to #{host}:#{port} running #{product} version #{version}..."
+  puts " #{user} on #{connection.broker_endpoint} running #{product} version #{version}..."
 
   SUBSCRIPTIONS.each do |subscription, options|
     Gitnotify.new(subscription, options[:notification], connection)
