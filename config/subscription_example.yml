@@ -1,0 +1,10 @@
+github:
+  :cred:
+    :host: localhost
+    :port: 5672
+    :user: github
+    :pass: github
+    :vhost: github
+  :notification:
+    :timeout: 6
+    :icon: /usr/share/icons/github/github2.png

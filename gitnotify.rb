@@ -48,4 +48,3 @@ AMQP.start(broker) do |connection|
     Gitnotify.new(subscription, options[:notification], connection)
   end
 end
-
