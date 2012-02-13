@@ -13,6 +13,10 @@ class Gitnotify
     channel = AMQP::Channel.new(connection, auto_recovery: true)
     queue = channel.queue(subscription, durable: true)
 
+    EM::PeriodicTimer.new 30.0 do
+      puts "#{Time.now} - still alive... "
+    end
+
     queue.subscribe do |md, pl|
 
       connection.on_connection_interruption do
