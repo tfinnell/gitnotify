@@ -4,6 +4,8 @@ Triggers a pop-up notification when a message is received from an AMQP queue.
 
 There's a bit to configure here if you're starting from scratch... but, if you already have an AMQP broker configured to your taste, edit ``broker.yaml`` with your credentials and run ``gitnotify.rb``. Once you enable Githubs AMQP service hook you should be getting notifications when someone pushes to your repository.
 
+Will change the functionality of this script so that some of this configuration isn't necessary..
+
 Advanced Message Queuing Protocol
 ---------------------------------
 Setup for Arch Linux
