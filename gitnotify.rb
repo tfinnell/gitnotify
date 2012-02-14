@@ -47,6 +47,7 @@ AMQP.start(broker) do |connection|
     head = "#{author} pushed to #{repo}/#{branch}"
 
     puts "#{head}: #{message}"
+
     Libnotify.show(
       summary: head,
       body: message,
