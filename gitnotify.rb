@@ -28,11 +28,13 @@ AMQP.start(broker) do |connection|
       puts ""
     end
 
+    puts options
+
     queue.subscribe do |md, pl|
 
       begin
         jpl = JSON.parse(pl)
-        icon = options[:icon]
+        icon = options[:notification][:icon]
       rescue JSON::ParserError
         jpl = JSON.parse '{"payload":{"message":"someones sending bad JSON :(","id":"error","author":{"username": "system"}},"_meta":{ "routing_key":"system.error.fed.bad.json"}}'
         icon =  Dir["/home/tim/git/trollicons/Icons/#{["Sad","Rage"].sample}/*"].sample
@@ -50,7 +52,7 @@ AMQP.start(broker) do |connection|
       Libnotify.show(
         summary: head,
         body: message,
-        timeout: options[:timeout],
+        timeout: options[:notification][:timeout],
         icon_path: icon)
     end
   end
