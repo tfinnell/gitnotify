@@ -46,14 +46,17 @@ AMQP.start(broker) do |connection|
       jpl["payload"]["author"]["username"] : "Something"
     head = "#{author} pushed to #{repo}/#{branch}"
 
-    EM.next_tick do
-      puts "#{head}: #{message}"
+    notification = Libnotify.new do |n|
+      n.summary   = head
+      n.body      = message
+      n.timeout   = 6
+      n.icon_path = icon
+    end
 
-      Libnotify.show(
-        summary: head,
-        body: message,
-        timeout: options[:notification][:timeout],
-        icon_path: icon)
+    EM.next_tick do
+      puts "#{head}:"
+      notification.show!
+      puts "  #{message}"
     end
   end
 end
