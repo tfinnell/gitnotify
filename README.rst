@@ -6,6 +6,8 @@ There's a bit to configure here if you're starting from scratch... but, if you a
 
 Will change the functionality of this script so that some of this configuration isn't necessary..
 
+Update change so push test!
+
 Advanced Message Queuing Protocol
 ---------------------------------
 Setup for Arch Linux
