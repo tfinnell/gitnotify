@@ -4,7 +4,6 @@ require 'amqp'
 require 'json'
 require 'yaml'
 require 'libnotify'
-require 'pry'
 
 $0 = "gitnotify\0"
 
